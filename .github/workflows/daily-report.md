@@ -1,38 +1,30 @@
 ---
 on:
-  schedule: daily
+  schedule:
+    - cron: "0 9 * * *"
 permissions:
-      contents: read
-engine: copilot
+  contents: read
+  actions: read
+  pull-requests: read
+  issues: read
 network: defaults
+safe-outputs:
+  create-issue:
+    labels:
+      - daily-report
 ---
 
 # daily-report
 
-Run daily at 9 AM and create an issue with a summary of repository activity from past 24 hours. Include commits, pull requests, issues, and CI/CD failures.
+Create one daily issue report covering repository activity from the past 24 hours.
 
-
-<!--
-## TODO: Customize this workflow
-
-The workflow has been generated based on your selections. Consider adding:
-
-- [ ] More specific instructions for the AI
-- [ ] Error handling requirements
-- [ ] Output format specifications
-- [ ] Integration with other workflows
-- [ ] Testing and validation steps
-
-## Configuration Summary
-
-- **Trigger**: Daily schedule (fuzzy, scattered time)
-- **AI Engine**: copilot
-- **Network Access**: defaults
-
-## Next Steps
-
-1. Review and customize the workflow content above
-2. Remove TODO sections when ready
-3. Run `gh aw compile` to generate the GitHub Actions workflow
-4. Test the workflow with a manual trigger or appropriate event
--->
+Requirements:
+- Run from the schedule trigger (9 AM).
+- Gather and summarize:
+  - Commits pushed in the last 24 hours
+  - Pull requests opened, updated, merged, or closed in the last 24 hours
+  - Issues opened or closed in the last 24 hours
+  - CI/CD failures from workflow runs in the last 24 hours
+- Create exactly one issue using `safe-outputs` `create-issue` (do not use direct write tools).
+- If no activity is found for a category, explicitly state that category had no activity.
+- Use clear markdown sections and include UTC timestamp boundaries for the 24-hour window.
